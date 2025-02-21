@@ -56,24 +56,4 @@ const userController = {
     }
   },
 
-  // Tạo người dùng mới (mã hóa password)
-  createUser: async (req, res) => {
-    try {
-      const { username, password } = req.body;
-
-      // Kiểm tra username đã tồn tại hay chưa
-      const existingUser = await User.findOne({ username });
-      if (existingUser) return res.status(400).json({ message: "Username đã tồn tại" });
-
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      const newUser = new User({ ...req.body, password: hashedPassword });
-      await newUser.save();
-      res.json({ message: "Tạo tài khoản thành công" });
-    } catch (error) {
-      res.status(500).json({ message: "Lỗi server" });
-    }
-  }
-};
-
 module.exports = userController;
